@@ -13,7 +13,7 @@ class Ray:
     def __init__(self, init_pt, init_dir):
         self.__pts = [init_pt]
         self.__dirs = [init_dir / np.linalg.norm(init_dir)]
-    
+        
     def pos(self):
         """
         Returns the current (most recently added) point in the trail.
@@ -39,4 +39,3 @@ class Ray:
         """
         return self.__pts
     
-

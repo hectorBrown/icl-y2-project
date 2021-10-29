@@ -3,7 +3,7 @@
 Contains the Element base class, and all derived classes.
 """
 
-import numpy as np
+import numpy as np, opticsutils as ou
 
 class Element:
     def propagate(self, ray):
@@ -28,14 +28,24 @@ class SphericalRefractor(Element):
         self.__curv = curvature
         self.__n1, self.__n2 = n1, n2
         self.__apt = apt
+        
+    def __center(self):
+        """
+        Gets the center of curvature of the lens.
+        """
+        
+        if self.__curv != 0:
+            return np.array([0, 0, self.__z0 + (1/self.__curv)])
+        else:
+            return np.array([0, 0, self.__z0])
     
-    def intercept(self, ray):
+    def __intercept(self, ray):
         """
         Calculates the first intercept of a ray with the surface described.
         """
         
         #vector difference between centre of curvature and ray position
-        r = ray.pos() - np.array([0,0,self.__z0])
+        r = ray.pos() - self.__center()
         l = None
         if self.__curv != 0:
             #calculate the two intersections with the sphere
@@ -62,3 +72,19 @@ class SphericalRefractor(Element):
             return None
         
         return intercept
+        
+    def propagate(self, ray):
+        """
+        Propagates a ray through the element.
+        If the ray does not intercept, this method will return False, and won't update the ray.
+        """
+        intercept = self.__intercept(ray)
+        
+        if intercept is None:
+            return False
+        
+        surface_normal = intercept - self.__center()
+        surface_normal /= np.linalg.norm(surface_normal)
+        print(surface_normal)
+        
+        ray.append(intercept, ou.refract(ray.dirn(), surface_normal, self.__n1, self.__n2))
