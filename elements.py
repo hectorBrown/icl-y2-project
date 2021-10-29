@@ -2,9 +2,63 @@
 """
 Contains the Element base class, and all derived classes.
 """
+
+import numpy as np
+
 class Element:
     def propagate(self, ray):
         """
         Propagate a ray through the optical element.
         """
         raise NotImplementedError()
+
+class SphericalRefractor(Element):
+    """
+    Represents a spherical refracting surface.
+    """
+    def __init__(self, z0, curvature, n1, n2, apt):
+        """
+        z0: the intersection of the element with the z axis.
+        curvature: 1/radius of curvature, this is negative if the centre of curvature is smaller than z0.
+        n1: refractive index on the side facing negative z.
+        n2: refractive index on the side facing positive z.
+        apt: aperture radius.
+        """
+        self.__z0 = z0
+        self.__curv = curvature
+        self.__n1, self.__n2 = n1, n2
+        self.__apt = apt
+    
+    def intercept(self, ray):
+        """
+        Calculates the first intercept of a ray with the surface described.
+        """
+        
+        #vector difference between centre of curvature and ray position
+        r = ray.pos() - np.array([0,0,self.__z0])
+        l = None
+        if self.__curv != 0:
+            #calculate the two intersections with the sphere
+            a = -np.dot(r, ray.dirn())
+            b = np.sqrt(np.dot(r, ray.dirn())**2 - np.linalg.norm(r)**2 + (1/self.__curv)**2)
+
+        #select based on curvature
+            if self.__curv < 0:
+                l = a + b
+            else:
+                l = a - b
+        else:
+            #special case for a planar surface
+            l = (self.__z0 - ray.pos()[2]) / ray.dirn()[2]
+
+        #check if intersection behind
+        if l < 0:
+            return None
+        
+        #check if point of intersection lies outside apt
+        intercept = ray.pos() + l * ray.dirn()
+        
+        if np.sqrt(intercept[0]**2 + intercept[1]**2) > self.__apt:
+            return None
+        
+        return intercept
