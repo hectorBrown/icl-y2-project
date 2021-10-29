@@ -3,6 +3,7 @@
 Contains the ray class.
 """
 
+import numpy as np
 
 class Ray:
     """
@@ -11,15 +12,15 @@ class Ray:
     
     def __init__(self, init_pt, init_dir):
         self.__pts = [init_pt]
-        self.__dirs = [init_dir]
+        self.__dirs = [init_dir / np.linalg.norm(init_dir)]
     
-    def curr_pt(self):
+    def pos(self):
         """
         Returns the current (most recently added) point in the trail.
         """
         return self.__pts[-1]
     
-    def curr_dir(self):
+    def dirn(self):
         """
         Returns the current (most recently added) direction in the trail.
         """
@@ -30,7 +31,7 @@ class Ray:
         Appends a new point-direction pair to the trail.
         """
         self.__pts.append(next_pt)
-        self.__dirs.append(next_dir)
+        self.__dirs.append(next_dir / np.linalg.norm(next_dir))
     
     def vertices(self):
         """
