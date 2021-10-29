@@ -4,6 +4,7 @@ Contains the ray class.
 """
 
 import numpy as np
+import copy
 
 class Ray:
     """
@@ -12,7 +13,10 @@ class Ray:
     
     def __init__(self, init_pt, init_dir):
         self.__pts = [init_pt]
-        self.__dirs = [init_dir / np.linalg.norm(init_dir)]
+        if np.linalg.norm(init_dir) != 0:
+            self.__dirs = [init_dir / np.linalg.norm(init_dir)]
+        else:
+            raise Exception("Ray can not have no direction.")
         
     def pos(self):
         """
@@ -39,3 +43,8 @@ class Ray:
         """
         return self.__pts
     
+    def copy(self):
+        r = Ray(np.array([0,0,0]), np.array([0,0,1]))
+        r.__pts = copy.deepcopy(self.__pts)
+        r.__dirs = copy.deepcopy(self.__dirs)
+        return r
