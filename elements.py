@@ -85,6 +85,5 @@ class SphericalRefractor(Element):
         
         surface_normal = intercept - self.__center()
         surface_normal /= np.linalg.norm(surface_normal)
-        print(surface_normal)
         
         ray.append(intercept, ou.refract(ray.dirn(), surface_normal, self.__n1, self.__n2))
