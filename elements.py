@@ -6,10 +6,11 @@ Contains the Element base class, and all derived classes.
 import numpy as np, opticsutils as ou
 
 class Element:
+    def __str__(self):
+        raise NotImplementedError()
+    def __repr__(self):
+        raise NotImplementedError()
     def propagate(self, ray):
-        """
-        Propagate a ray through the optical element.
-        """
         raise NotImplementedError()
 
 class SphericalRefractor(Element):
@@ -29,6 +30,9 @@ class SphericalRefractor(Element):
         self.__n1, self.__n2 = n1, n2
         self.__apt = apt
         
+    def __repr__(self):
+        return "elements.SphericalRefractor({:g}, {:g}, {:g}, {:g}, {:g})".format(self.__z0, self.__curv, self.__n1, self.__n2, self.__apt)
+
     def __center(self):
         """
         Gets the center of curvature of the lens.

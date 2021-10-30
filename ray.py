@@ -17,6 +17,9 @@ class Ray:
             self.__dirs = [init_dir / np.linalg.norm(init_dir)]
         else:
             raise Exception("Ray can not have no direction.")
+    
+    def __repr__(self):
+        return "ray.Ray {{pts: {}, dirs: {}}}".format(self.__pts, self.__dirs)
         
     def pos(self):
         """

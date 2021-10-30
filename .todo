@@ -6,7 +6,10 @@
     <note priority="veryhigh" time="1635621930">
         find ray that throws error in spherical refractor test
     </note>
-    <note priority="high" time="1635621910">
+    <note priority="high" time="1635621910" done="1635630535">
         add __str__, __repr__ classes to all objects
+        <comment>
+            didn't bother with __str__, not necessary
+        </comment>
     </note>
 </todo>
