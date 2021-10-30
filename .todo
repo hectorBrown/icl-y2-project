@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<todo version="0.1.20">
+    <note priority="veryhigh" time="1635621889">
+        test spherical refractor
+    </note>
+    <note priority="veryhigh" time="1635621930">
+        find ray that throws error in spherical refractor test
+    </note>
+    <note priority="high" time="1635621910">
+        add __str__, __repr__ classes to all objects
+    </note>
+</todo>
