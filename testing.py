@@ -19,12 +19,14 @@ def spherical_refractor_test():
     results = []
     i = 0
     
-    for x in range(0, 20, 4):
-        for y in range(0, 20, 4):
-            rays.append(Ray(np.array([x / 10, y / 10, 0]), np.array([0, 0, 10])))
-            results.append([rays[i].copy()])
-            i += 1
-    
+#    for x_dir in range(-4, 4, 4):
+#        for y_dir in range(-4, 4, 4):
+#            rays.append(Ray(np.array([0 , 0, 0]), np.array([x_dir, y_dir, 10])))
+#            results.append([rays[i].copy()])
+#            i += 1
+    rays.append(Ray(np.array([0,0,0]), np.array([0,0,1])))
+    results.append([rays[i].copy()])
+    #something makes an ERROR AND I DON't KNOW WHAT
     #generates error
 #    for x in range(0, 20, 4):
 #        for y in range(0, 20, 4):
