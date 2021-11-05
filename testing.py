@@ -5,31 +5,32 @@ Created on Fri Oct 29 16:32:27 2021
 @author: hb1020
 """
 
-from elements import *
-from ray import *
+import elements as e, ray as r
 import matplotlib.pyplot as plt, numpy as np
 
-def spherical_refractor_test():    
-    """
-    Many-ray test for the SphericalRefractor class.
-    """
-    
-    refractor = SphericalRefractor(10, (1/3), 1, 1.5, 2)
+def spherical_refractor(z0, curvature, n1, n2, output_z0):
+    refractor = e.SphericalRefractor(z0, curvature, n1, n2, 1/curvature)
+    output = e.OutputPlane(output_z0)
     
     rays = []
-    results = []
-    i = 0
     
-    for y in range(-1, 2):
-        for y_dir in range(-20, 21, 4):
-            rays.append(Ray(np.array([0, y, 0]), np.array([0, y_dir / 10, 10])))
-            i += 1
-            
+    #setup rays
+#    for i in range(6):
+#        for j in range(-5, 6):
+#            y = i * 2 * z0 / 10
+#            y_dir = j * 2 * z0 / 10
+#            
+#            rays.append(r.Ray(np.array([0, y, 0]), np.array([0, y_dir, z0])))
     
-    for k, ray in enumerate(rays):
+    rays.append(r.Ray(np.array([0, 0.1, 0]), np.array([0, 0, 1])))
+    rays.append(r.Ray(np.array([0, 0, 0]), np.array([0, 0, 1])))
+    rays.append(r.Ray(np.array([0, 0.2, 0]), np.array([0, 0, 1])))
+    
+    #propagate through system
+    for ray in rays:
         refractor.propagate(ray)
-        vertices = ray.vertices()
-        vertices.append(vertices[-1] + 5 * ray.dirn())
-        plt.plot([x[2] for x in vertices],[x[1] for x in vertices])
+        output.propagate(ray)
+        plt.plot([x[2] for x in ray.vertices()], [x[1] for x in ray.vertices()])
     
     plt.show()
+    
