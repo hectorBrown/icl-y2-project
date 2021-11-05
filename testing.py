@@ -15,16 +15,16 @@ def spherical_refractor(z0, curvature, n1, n2, output_z0):
     rays = []
     
     #setup rays
-#    for i in range(6):
-#        for j in range(-5, 6):
-#            y = i * 2 * z0 / 10
-#            y_dir = j * 2 * z0 / 10
-#            
-#            rays.append(r.Ray(np.array([0, y, 0]), np.array([0, y_dir, z0])))
+    for i in range(6):
+        y = i * (1/curvature) / 10
+        
+        rays.append(r.Ray(np.array([0, y, 0]), np.array([0, 0, z0])))
     
-    rays.append(r.Ray(np.array([0, 0.1, 0]), np.array([0, 0, 1])))
-    rays.append(r.Ray(np.array([0, 0, 0]), np.array([0, 0, 1])))
-    rays.append(r.Ray(np.array([0, 0.2, 0]), np.array([0, 0, 1])))
+    for i in range(6):
+        y = i * (1/curvature) / 10
+        
+        rays.append(r.Ray(np.array([0, y, 0]), np.array([0, -(1/curvature) / 10, z0])))
+
     
     #propagate through system
     for ray in rays:

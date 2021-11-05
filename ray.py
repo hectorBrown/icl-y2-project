@@ -6,6 +6,18 @@ Contains the ray class.
 import numpy as np
 import copy
 
+def bundle(r, n_rings, n_rays):
+    """
+    Generates a bundle of rays of radius r.
+    n_rings is the number of concentric rings to build the bundle of (incuding the central ray).
+    n_rays is the number of rays to be equally spaced about each ring.
+    """
+    r_step = r / n_rings
+    for i in range(n_rings):
+        rad = i * r_step
+        #Needs to walk around the circle and place rays equally.
+        
+
 class Ray:
     """
     Describes an optical ray with a trail of positions and directions.
