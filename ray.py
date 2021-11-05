@@ -10,12 +10,21 @@ def bundle(r, n_rings, n_rays):
     """
     Generates a bundle of rays of radius r.
     n_rings is the number of concentric rings to build the bundle of (incuding the central ray).
-    n_rays is the number of rays to be equally spaced about each ring.
+    n_rays is the number of rays to be equally spaced about the first ring.
     """
+    rays = []
     r_step = r / n_rings
-    for i in range(n_rings):
-        rad = i * r_step
-        #Needs to walk around the circle and place rays equally.
+    for i in range(n_rings + 1):
+        if i == 0:
+            rays.append(Ray(np.array([0, 0, 0]), np.array([0, 0, 1])))
+        else:
+            the_step = 2 * np.pi / (n_rays * i)
+            for j in range(n_rays * i):
+                r_n = r_step * i
+                the_n = the_step * j
+                rays.append(Ray(np.array([r_n * np.cos(the_n), r_n * np.sin(the_n), 0]), np.array([0, 0, 1])))
+    return rays
+
         
 
 class Ray:
