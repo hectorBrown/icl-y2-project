@@ -6,12 +6,11 @@ Contains the Element base class, and all derived classes.
 import numpy as np, opticsutils as ou
 
 class Element:
-    def __str__(self):
-        raise NotImplementedError()
     def __repr__(self):
         raise NotImplementedError()
     def propagate(self, ray):
         raise NotImplementedError()
+
 
 class SphericalRefractor(Element):
     """
@@ -97,3 +96,41 @@ class SphericalRefractor(Element):
         surface_normal /= np.linalg.norm(surface_normal)
         
         ray.append(intercept, ou.refract(ray.dirn(), surface_normal, self.__n1, self.__n2))
+        
+
+class OutputPlane(Element):
+    """
+    Represents a virtual plane that does not modify rays.
+    """
+    def __init__(self, z0):
+        """
+        z0: the intersection of the element with the z axis.
+        """
+        self.__z0 = z0
+    def __repr__(self):
+        return "elements.OutputPlane({:g})".format(self.__z0)
+    
+    def __intercept(self, ray):
+        l = (self.__z0 - ray.pos()[2]) / ray.dirn()[2]
+        
+        #check if behind
+        if l < 0:
+            return None
+    
+        intercept = ray.pos() + l * ray.dirn()
+        
+        return intercept
+    
+    def propagate(self, ray):
+        """
+        Propagates a ray through the element.
+        If the ray does not intercept, this method will return False, and won't update the ray.
+        """
+        intercept = self.__intercept(ray)
+        
+        if intercept is None:
+            return False
+        
+        ray.append(intercept, ray.dirn().copy())
+        
+        
