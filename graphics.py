@@ -7,3 +7,9 @@ def graph_zplane(rays, z):
     """
     print(np.array([x.get_xy(z) for x in rays]).transpose())
     return plt.scatter(*np.array([x.get_xy(z) for x in rays]).transpose())
+
+def graph_yplane(rays):
+    fig = plt.figure()
+    for ray in rays:
+        plt.plot([x[2] for x in ray.vertices()], [x[1] for x in ray.vertices()])
+    return fig
