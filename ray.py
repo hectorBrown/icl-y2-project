@@ -72,3 +72,23 @@ class Ray:
         r.__pts = copy.deepcopy(self.__pts)
         r.__dirs = copy.deepcopy(self.__dirs)
         return r
+    
+    def get_xy(self, z):
+        """
+        Returns the x,y values for a given z, returns None if the ray does not exist at that z.
+        """
+        if all([x[2] != z for x in self.__pts]):
+            for i in range(len(self.__pts) - 1):
+                pair = (self.__pts[i], self.__pts[i + 1])
+                if (z >= pair[0][2] and z <= pair[1][2]) or (z <= pair[0][2] and z >= pair[1][2]):
+                    dirn = pair[1] - pair[0]
+                    t = (z - pair[0][2])/dirn[2]
+                    pt = pair[0] + t * dirn
+                    return pt[:-1]
+                else:
+                    return None
+        else:
+            for pt in self.__pts:
+                if pt[2] == z:
+                    return pt[:-1]
+
