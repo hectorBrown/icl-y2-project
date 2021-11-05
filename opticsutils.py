@@ -23,9 +23,9 @@ def refract(incident, surface, n1, n2):
         return -surface
     
     #find refracted ray in plane
-    b = (np.cos(the_1) * np.cos(the_2) + np.sqrt((np.cos(the_1) * np.cos(the_2))**2 + 4 * np.sin(the_2)**2))/2
-    a = np.cos(the_2) - b * np.cos(the_1)
-    refracted = -a * surface + b * incident
+    b = abs(np.sin(the_2)/np.sin(the_1))
+    a = b * np.cos(the_1) - np.cos(the_2)
+    refracted = a * surface + b * incident
     
     #return
     return refracted
