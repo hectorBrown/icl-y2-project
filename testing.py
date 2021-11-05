@@ -7,6 +7,7 @@ Created on Fri Oct 29 16:32:27 2021
 
 from elements import *
 from ray import *
+import matplotlib.pyplot as plt, numpy as np
 
 def spherical_refractor_test():    
     """
@@ -19,16 +20,16 @@ def spherical_refractor_test():
     results = []
     i = 0
     
-    for x in range(0, 20, 4):
-        for y in range(0, 20, 4):
-            for x_dir in range(-20, 20, 4):
-                for y_dir in range(-20, 20, 4):
-                    rays.append(Ray(np.array([x / 10, y / 10, 0]), np.array([x_dir / 10, y_dir / 10, 10])))
-                    results.append([rays[i].copy()])
-                    i += 1
+    for y in range(-1, 2):
+        for y_dir in range(-20, 21, 4):
+            rays.append(Ray(np.array([0, y, 0]), np.array([0, y_dir / 10, 10])))
+            i += 1
+            
     
     for k, ray in enumerate(rays):
         refractor.propagate(ray)
-        results[k].append(ray.copy())
+        vertices = ray.vertices()
+        vertices.append(vertices[-1] + 5 * ray.dirn())
+        plt.plot([x[2] for x in vertices],[x[1] for x in vertices])
     
-    return results
+    plt.show()
