@@ -18,7 +18,10 @@
             didn't bother with __str__, not necessary
         </comment>
     </note>
-    <note priority="veryhigh" time="1636158981">
+    <note priority="veryhigh" time="1636158981" done="1636219382">
         graphics z func throws err
+        <comment>
+            cleaned get_xy
+        </comment>
     </note>
 </todo>
