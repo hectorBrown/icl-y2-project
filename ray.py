@@ -85,8 +85,7 @@ class Ray:
                     t = (z - pair[0][2])/dirn[2]
                     pt = pair[0] + t * dirn
                     return pt[:-1]
-                else:
-                    return None
+            return None
         else:
             for pt in self.__pts:
                 if pt[2] == z:
