@@ -9,6 +9,7 @@ def refract(incident, surface, n1, n2):
     """
     Refracts a ray according to Snell's law, both incident and surface should be normalised vectors.
     """
+
     #get angle of incidence
     the_1 = np.arccos(np.dot(-incident, surface))
     

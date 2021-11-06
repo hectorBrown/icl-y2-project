@@ -42,6 +42,7 @@ class Ray:
     def __repr__(self):
         return "ray.Ray {{pts: {}, dirs: {}}}".format(self.__pts, self.__dirs)
         
+
     def pos(self):
         """
         Returns the current (most recently added) point in the trail.
@@ -90,4 +91,3 @@ class Ray:
             for pt in self.__pts:
                 if pt[2] == z:
                     return pt[:-1]
-

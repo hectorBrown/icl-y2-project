@@ -3,7 +3,8 @@
 Contains the Element base class, and all derived classes.
 """
 
-import numpy as np, opticsutils as ou
+import numpy as np
+import opticsutils as ou
 
 class Element:
     def __repr__(self):
@@ -12,10 +13,12 @@ class Element:
         raise NotImplementedError()
 
 
+
 class SphericalRefractor(Element):
     """
     Represents a spherical refracting surface.
     """
+
     def __init__(self, z0, curvature, n1, n2, apt):
         """
         z0: the intersection of the element with the z axis.
@@ -31,6 +34,7 @@ class SphericalRefractor(Element):
         
     def __repr__(self):
         return "elements.SphericalRefractor({:g}, {:g}, {:g}, {:g}, {:g})".format(self.__z0, self.__curv, self.__n1, self.__n2, self.__apt)
+
 
     def __center(self):
         """
@@ -82,6 +86,7 @@ class SphericalRefractor(Element):
         
         return intercept
         
+
     def propagate(self, ray):
         """
         Propagates a ray through the element.
@@ -98,18 +103,22 @@ class SphericalRefractor(Element):
         ray.append(intercept, ou.refract(ray.dirn(), surface_normal, self.__n1, self.__n2))
         
 
+
 class OutputPlane(Element):
     """
     Represents a virtual plane that does not modify rays.
     """
+
     def __init__(self, z0):
         """
         z0: the intersection of the element with the z axis.
         """
         self.__z0 = z0
+
     def __repr__(self):
         return "elements.OutputPlane({:g})".format(self.__z0)
     
+
     def __intercept(self, ray):
         l = (self.__z0 - ray.pos()[2]) / ray.dirn()[2]
         
@@ -121,6 +130,7 @@ class OutputPlane(Element):
         
         return intercept
     
+
     def propagate(self, ray):
         """
         Propagates a ray through the element.
@@ -132,5 +142,3 @@ class OutputPlane(Element):
             return False
         
         ray.append(intercept, ray.dirn().copy())
-        
-        

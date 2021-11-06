@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+Graphics utility functions.
+"""
+
 import matplotlib.pyplot as plt, numpy as np
 import ray as r
 

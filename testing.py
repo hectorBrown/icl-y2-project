@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Oct 29 16:32:27 2021
-
-@author: hb1020
+Testing module.
 """
 
-import elements as e, ray as r
 import matplotlib.pyplot as plt, numpy as np
+import elements as e, ray as r
 
 def spherical_refractor(z0, curvature, n1, n2, output_z0):
+    """
+    A relatively generic spherical refractor test.
+    """
+
     refractor = e.SphericalRefractor(z0, curvature, n1, n2, 1/curvature)
     output = e.OutputPlane(output_z0)
     
@@ -33,4 +35,3 @@ def spherical_refractor(z0, curvature, n1, n2, output_z0):
         plt.plot([x[2] for x in ray.vertices()], [x[1] for x in ray.vertices()])
     
     plt.show()
-    
