@@ -15,6 +15,9 @@ def graph_zplane(rays, z):
         raise Exception("None of the rays have positions for this z value.")
 
 def graph_yplane(rays):
+    """
+    Graphs a set of rays as a y-z plane.
+    """
     fig = plt.figure()
     for ray in rays:
         plt.plot([x[2] for x in ray.vertices()], [x[1] for x in ray.vertices()])
