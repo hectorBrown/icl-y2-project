@@ -7,12 +7,12 @@ import numpy as np
 import opticsutils as ou
 
 class Element:
+
     def __repr__(self):
         raise NotImplementedError()
+
     def propagate(self, ray):
         raise NotImplementedError()
-
-
 
 class SphericalRefractor(Element):
     """
@@ -27,6 +27,7 @@ class SphericalRefractor(Element):
         n2: refractive index on the side facing positive z.
         apt: aperture radius.
         """
+
         self.__z0 = z0
         self.__curv = curvature
         self.__n1, self.__n2 = n1, n2
@@ -34,7 +35,6 @@ class SphericalRefractor(Element):
         
     def __repr__(self):
         return "elements.SphericalRefractor({:g}, {:g}, {:g}, {:g}, {:g})".format(self.__z0, self.__curv, self.__n1, self.__n2, self.__apt)
-
 
     def __center(self):
         """
@@ -65,7 +65,7 @@ class SphericalRefractor(Element):
             a = -np.dot(r, ray.dirn())
             b = np.sqrt(det)
 
-        #select based on curvature
+            #select based on curvature
             if self.__curv < 0:
                 l = a + b
             else:
@@ -80,18 +80,17 @@ class SphericalRefractor(Element):
         
         #check if point of intersection lies outside apt
         intercept = ray.pos() + l * ray.dirn()
-        
         if np.sqrt(intercept[0]**2 + intercept[1]**2) > self.__apt:
             return None
         
         return intercept
-        
 
     def propagate(self, ray):
         """
         Propagates a ray through the element.
         If the ray does not intercept, this method will return False, and won't update the ray.
         """
+
         intercept = self.__intercept(ray)
         
         if intercept is None:
@@ -102,8 +101,6 @@ class SphericalRefractor(Element):
         
         ray.append(intercept, ou.refract(ray.dirn(), surface_normal, self.__n1, self.__n2))
         
-
-
 class OutputPlane(Element):
     """
     Represents a virtual plane that does not modify rays.
@@ -113,6 +110,7 @@ class OutputPlane(Element):
         """
         z0: the intersection of the element with the z axis.
         """
+
         self.__z0 = z0
 
     def __repr__(self):
@@ -136,6 +134,7 @@ class OutputPlane(Element):
         Propagates a ray through the element.
         If the ray does not intercept, this method will return False, and won't update the ray.
         """
+
         intercept = self.__intercept(ray)
         
         if intercept is None:

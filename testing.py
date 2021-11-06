@@ -16,7 +16,7 @@ def spherical_refractor(z0, curvature, n1, n2, output_z0):
     
     rays = []
     
-    #setup rays
+    #setup rays in 2 directions
     for i in range(6):
         y = i * (1/curvature) / 10
         
@@ -27,7 +27,6 @@ def spherical_refractor(z0, curvature, n1, n2, output_z0):
         
         rays.append(r.Ray(np.array([0, y, 0]), np.array([0, -(1/curvature) / 10, z0])))
 
-    
     #propagate through system
     for ray in rays:
         refractor.propagate(ray)
