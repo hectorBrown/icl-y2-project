@@ -6,9 +6,13 @@ def graph_zplane(rays, z):
     Graphs a set of rays at a given z plane.
     """
     #THIS DOESN'T WORK?
-    fig = plt.figure()
-    plt.scatter(*np.array([x.get_xy(z) for x in rays]).transpose())
-    return fig
+    xy = list(filter(lambda y : not y is None, [x.get_xy(z) for x in rays]))
+    if len(xy):
+        fig = plt.figure()
+        plt.scatter(*np.array(xy).transpose())
+        return fig
+    else:
+        raise Exception("None of the rays have positions for this z value.")
 
 def graph_yplane(rays):
     fig = plt.figure()
