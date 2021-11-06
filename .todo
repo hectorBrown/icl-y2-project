@@ -1,15 +1,24 @@
 <?xml version="1.0"?>
 <todo version="0.1.20">
-    <note priority="veryhigh" time="1635621889">
+    <note priority="veryhigh" time="1635621889" done="1636158962">
         test spherical refractor
+        <comment>
+            tested
+        </comment>
     </note>
-    <note priority="veryhigh" time="1635621930">
+    <note priority="veryhigh" time="1635621930" done="1636158966">
         find ray that throws error in spherical refractor test
+        <comment>
+            found and solved
+        </comment>
     </note>
     <note priority="high" time="1635621910" done="1635630535">
         add __str__, __repr__ classes to all objects
         <comment>
             didn't bother with __str__, not necessary
         </comment>
+    </note>
+    <note priority="veryhigh" time="1636158981">
+        graphics z func throws err
     </note>
 </todo>

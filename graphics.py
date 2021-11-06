@@ -5,8 +5,10 @@ def graph_zplane(rays, z):
     """
     Graphs a set of rays at a given z plane.
     """
-    print(np.array([x.get_xy(z) for x in rays]).transpose())
-    return plt.scatter(*np.array([x.get_xy(z) for x in rays]).transpose())
+    #THIS DOESN'T WORK?
+    fig = plt.figure()
+    plt.scatter(*np.array([x.get_xy(z) for x in rays]).transpose())
+    return fig
 
 def graph_yplane(rays):
     fig = plt.figure()
