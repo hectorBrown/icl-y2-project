@@ -88,7 +88,7 @@ class SphericalRefractor(Element):
     def propagate(self, ray):
         """
         Propagates a ray through the element.
-        If the ray does not intercept, this method will return False, and won't update the ray.
+        If the ray does not intercept, or totally internally reflects, this method will return False, and won't update the ray.
         """
 
         intercept = self.__intercept(ray)
@@ -96,10 +96,18 @@ class SphericalRefractor(Element):
         if intercept is None:
             return False
         
-        surface_normal = intercept - self.__center()
+        if self.__curv > 0:
+            surface_normal = intercept - self.__center()
+        else:
+            surface_normal = self.__center() - intercept
         surface_normal /= np.linalg.norm(surface_normal)
-        
-        ray.append(intercept, ou.refract(ray.dirn(), surface_normal, self.__n1, self.__n2))
+
+        refracted_dirn = ou.refract(ray.dirn(), surface_normal, self.__n1, self.__n2)
+
+        if not refracted_dirn is None:
+            ray.append(intercept, refracted_dirn)
+        else:
+            return False
         
 class OutputPlane(Element):
     """
