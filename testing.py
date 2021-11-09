@@ -4,7 +4,7 @@ Testing module.
 """
 
 import matplotlib.pyplot as plt, numpy as np
-import elements as e, ray as r
+import elements as e, graphics as g, opticsutils as ou, ray as r
 
 def spherical_refractor(z0, curvature, n1, n2, output_z0):
     """
