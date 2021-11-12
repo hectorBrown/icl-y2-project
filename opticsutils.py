@@ -58,4 +58,26 @@ def get_focus(lens, paraxial_precision=0.1e-3, output_step=250e-3):
     
     return abs(vertices[-2][2] - vertices[-1][2]) * ratio + vertices[-2][2]
     
+def spot_size(lens, focus=None, bundle_radius=5e-3):
+    """
+    Gets the RMS geometrical spot size for a lens system.
+    focus: defaults to None, if None will use opticsutils.get_focus to find.
+    bundle_radius: the radius of the bundle used for estimation.
+    """
+    
+    if focus is None:
+        focus = get_focus(lens)
+        
+    bundle = r.bundle(bundle_radius, 6, 6)
+    output = e.OutputPlane(focus)
+    
+    for ray in bundle:
+        for surface in lens:
+            surface.propagate(ray)
+        output.propagate(ray)
+    
+    spots = [np.linalg.norm(r.get_xy(focus))**2 for r in bundle]
+    
+    return np.sqrt(np.average(spots))
+            
     
