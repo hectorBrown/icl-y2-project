@@ -19,7 +19,7 @@ class SphericalRefractor(Element):
     Represents a spherical refracting surface.
     """
 
-    def __init__(self, z0, curvature, n1, n2, apt):
+    def __init__(self, z0, curvature, n1, n2, apt=None):
         """
         z0: the intersection of the element with the z axis.
         curvature: 1/radius of curvature, this is negative if the centre of curvature is smaller than z0.
@@ -80,8 +80,9 @@ class SphericalRefractor(Element):
         
         #check if point of intersection lies outside apt
         intercept = ray.pos() + l * ray.dirn()
-        if np.sqrt(intercept[0]**2 + intercept[1]**2) > self.__apt:
-            return None
+        if not self.__apt is None:
+            if np.sqrt(intercept[0]**2 + intercept[1]**2) > self.__apt:
+                return None
         
         return intercept
 
