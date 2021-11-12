@@ -36,6 +36,7 @@ class Ray:
     """
     
     def __init__(self, init_pt, init_dir):
+        init_pt, init_dir = np.array(init_pt), np.array(init_dir)
         self.__pts = [init_pt]
         if np.linalg.norm(init_dir) != 0:
             #normalise direction (essentially for easy testing)
