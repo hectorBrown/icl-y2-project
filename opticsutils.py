@@ -4,6 +4,7 @@ General purpose utility functions for optics.
 """
 
 import numpy as np
+import ray as r, elements as e
 
 def refract(incident, surface, n1, n2):
     """
@@ -29,3 +30,32 @@ def refract(incident, surface, n1, n2):
     refracted = a * surface + b * incident
     
     return refracted
+
+def get_focus(lens, paraxial_precision=0.1e-3, output_step=250e-3):
+    """
+    Uses a probe ray to estimate the focal point of a lens system.
+    lens: should be a list containing all refracting surfaces.
+    paraxial_precision: the y-height of the probe ray.
+    output_step: best not to change, effects the way the function iterates, try raising if not producing output.
+    
+    Returns the z-value of the paraxial focus.
+    """
+    
+    probe = r.Ray(np.array([0, paraxial_precision, 0]), np.array([0,0,1]))
+    for surface in lens:
+        surface.propagate(probe)
+    
+    #this progressively increases the output plane until the probe ray falls through the z-axis.
+    i = 1
+    while probe.pos()[1] > 0:
+        output = e.OutputPlane(i * output_step)
+        output.propagate(probe)
+        i += 1
+    
+    #assuming linear ray propagation, interpolates z position
+    vertices = probe.vertices()
+    ratio = 1 - abs(vertices[-1][1]/(vertices[-2][1] - vertices[-1][1]))
+    
+    return abs(vertices[-2][2] - vertices[-1][2]) * ratio + vertices[-2][2]
+    
+    
