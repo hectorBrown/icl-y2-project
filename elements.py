@@ -54,17 +54,18 @@ class SphericalRefractor(Element):
         #vector difference between centre of curvature and ray position
         r = ray.pos() - self.__center()
         l = None
-        
-        #check if will intercept at all
-        det = np.dot(r, ray.dirn())**2 - np.linalg.norm(r)**2 + (1/self.__curv)**2
-        if det < 0:
-            return None
+    
         
         if self.__curv != 0:
+            #check if will intercept at all
+            det = np.dot(r, ray.dirn())**2 - np.linalg.norm(r)**2 + (1/self.__curv)**2
+            if det < 0:
+                return None
+            
             #calculate the two intersections with the sphere
             a = -np.dot(r, ray.dirn())
             b = np.sqrt(det)
-
+            
             #select based on curvature
             if self.__curv < 0:
                 l = a + b
@@ -99,8 +100,11 @@ class SphericalRefractor(Element):
         
         if self.__curv > 0:
             surface_normal = intercept - self.__center()
-        else:
+        elif self.__curv > 0:
             surface_normal = self.__center() - intercept
+        else:
+            surface_normal = np.array([0,0,-1.0])
+            
         surface_normal /= np.linalg.norm(surface_normal)
 
         refracted_dirn = ou.refract(ray.dirn(), surface_normal, self.__n1, self.__n2)
