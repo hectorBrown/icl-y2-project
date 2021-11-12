@@ -100,7 +100,7 @@ class SphericalRefractor(Element):
         
         if self.__curv > 0:
             surface_normal = intercept - self.__center()
-        elif self.__curv > 0:
+        elif self.__curv < 0:
             surface_normal = self.__center() - intercept
         else:
             surface_normal = np.array([0,0,-1.0])
