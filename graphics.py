@@ -9,6 +9,8 @@ Update matplotlib to fix -- please see https://github.com/matplotlib/matplotlib/
 import matplotlib.pyplot as plt, numpy as np
 import ray as r
 
+MPL_BUGFIX_SCALE = 1.1
+
 def graph_zplane(rays, z):
     """
     Graphs a set of rays at a given z plane.
@@ -22,8 +24,8 @@ def graph_zplane(rays, z):
         fig, ax = plt.subplots()
         ax.scatter(*np.array(xy).transpose())
         #attempted fix for matplotlib bug
-        ax.set_xlim(-abs(max([x[0] for x in xy])) * 1.1, abs(max([x[0] for x in xy])) * 1.1)
-        ax.set_ylim(-abs(max([x[1] for x in xy])) * 1.1, abs(max([x[1] for x in xy])) * 1.1)
+        ax.set_xlim(-abs(max([x[0] for x in xy])) * MPL_BUGFIX_SCALE, abs(max([x[0] for x in xy])) * MPL_BUGFIX_SCALE)
+        ax.set_ylim(-abs(max([x[1] for x in xy])) * MPL_BUGFIX_SCALE, abs(max([x[1] for x in xy])) * MPL_BUGFIX_SCALE)
         ax.set_aspect("equal")
         return fig
     else:

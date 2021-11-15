@@ -54,7 +54,7 @@ def get_focus(lens, paraxial_precision=0.1e-3, output_step=250e-3):
     
     #assuming linear ray propagation, interpolates z position
     vertices = probe.vertices()
-    ratio = 1 - abs(vertices[-1][1]/(vertices[-2][1] - vertices[-1][1]))
+    ratio = abs(vertices[-2][1]/(vertices[-2][1] - vertices[-1][1]))
     
     return abs(vertices[-2][2] - vertices[-1][2]) * ratio + vertices[-2][2]
     
@@ -63,6 +63,8 @@ def spot_size(lens, focus=None, bundle_radius=5e-3):
     Gets the RMS geometrical spot size for a lens system.
     focus: defaults to None, if None will use opticsutils.get_focus to find.
     bundle_radius: the radius of the bundle used for estimation.
+    
+    If this method hangs, it is likely due to opticsutils.get_focus - call it explicitly as a kwarg to adjust running parameters or input a focus manually.
     """
     
     if focus is None:
