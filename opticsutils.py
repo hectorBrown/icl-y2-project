@@ -4,7 +4,7 @@ General purpose utility functions for optics.
 """
 
 import numpy as np
-import ray as r, elements as e
+import ray as r, elements as e, scipy.optimize as op
 
 #a value that tries to account for the truncation of numbers in the spot_size() method
 SPOTSIZE_OUTPUT_ERROR=1.1
@@ -93,3 +93,17 @@ def spot_size(lens, focus=None, bundle_radius=5e-3):
     
     return np.sqrt(np.average(spots))
             
+def get_c2(c1, focus, z1=100e-3, z2=105e-3, n1=1, n2=1.5168):
+    """
+    Finds the curvature c2 of a surface in a singlet lens for a given focus.
+
+    c1: curvature of the first surface.
+    focus: paraxial focus point.
+    z1: position of the first lens.
+    z2: position of the second lens.
+    n1: refractive index of the environment.
+    n2: refractive index of the lens.
+    """
+
+    return op.newton(lambda x : get_focus([e.SphericalRefractor(z1, c1, n1, n2),
+                                            e.SphericalRefractor(z2, x, n2, n1)]) - focus, c1)
