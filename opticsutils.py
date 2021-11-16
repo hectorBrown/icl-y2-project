@@ -41,7 +41,7 @@ def get_focus(lens, paraxial_precision=0.1e-3, output_step=250e-3):
     Returns the z-value of the paraxial focus.
     """
     
-    probe = r.Ray(np.array([0, paraxial_precision, 0]), np.array([0,0,1]))
+    probe = r.Ray([0, paraxial_precision, 0], [0,0,1])
     for surface in lens:
         surface.propagate(probe)
     

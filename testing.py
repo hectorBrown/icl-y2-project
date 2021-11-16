@@ -20,7 +20,7 @@ def t9():
 def t10():
     refractor = e.SphericalRefractor(100e-3, 0.03e3, 1, 1.5)
     output = e.OutputPlane(250e-3)
-    bundle = [r.Ray(np.array([0,0,0]), np.array([0,0,1])), r.Ray(np.array([0,0.1e-3,0]), np.array([0,0,1]))]
+    bundle = [r.Ray([0,0,0], [0,0,1]), r.Ray([0,0.1e-3,0], [0,0,1])]
     
     for ray in bundle:
         refractor.propagate(ray)
@@ -31,9 +31,9 @@ def t10():
 def t11():
     refractor = e.SphericalRefractor(100e-3, 0.03e3, 1, 1.5)
     output = e.OutputPlane(400e-3)
-    bundle = [r.Ray(np.array([0, 2e-3, 0]), np.array([0,0,1])),
-              r.Ray(np.array([0, 2e-3, 0]), np.array([0, -2e-3, 100e-3])),
-              r.Ray(np.array([0, 2e-3, 0]), np.array([0, -4e-3, 100e-3]))]
+    bundle = [r.Ray([0, 2e-3, 0], [0,0,1]),
+              r.Ray([0, 2e-3, 0], [0, -2e-3, 100e-3]),
+              r.Ray([0, 2e-3, 0], [0, -4e-3, 100e-3])]
     
     for ray in bundle:
         refractor.propagate(ray)
