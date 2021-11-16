@@ -3,8 +3,8 @@
 Testing module.
 """
 
-import matplotlib.pyplot as plt, numpy as np
-import elements as e, graphics as g, opticsutils as ou, ray as r
+import matplotlib.pyplot as plt, numpy as np, scipy.optimize as op
+import elements as e, graphics as g, opticsutils as ou, ray as r, optimizer as ot
 
 def t9():
     refractor = e.SphericalRefractor(100e-3, 0.03e3, 1, 1.5)
@@ -79,4 +79,20 @@ def t15():
     
     return {"correct": (focus_2, spot_size_2), "reverse": (focus_1, spot_size_1)}
     
+def optimize(focus):
+    c1 = op.minimize(lambda x : ot.spot_size_optimizer(x, focus), 0.02e3, method="Nelder-Mead")["x"][0]
+    return (c1, ou.get_c2(c1, focus))
 
+def graph_optimization(_range=range(0, 400)):
+    c1 = [x / 10 for x in _range]
+    size = []
+    focus = t15()["correct"][0]
+    for i, c in enumerate(c1):
+        print("{0:.3f}%".format(i / len(c1) * 100))
+        if not ou.get_c2(c, focus) is None:
+            size.append(ou.spot_size([e.SphericalRefractor(100e-3, c, 1, 1.5168),
+                                    e.SphericalRefractor(105e-3, ou.get_c2(c, focus), 1.5168, 1)]))
+        else:
+            size.append(None)
+    plt.plot(c1, size)
+    plt.show()

@@ -3,8 +3,8 @@
 General purpose utility functions for optics.
 """
 
-import numpy as np
-import ray as r, elements as e, scipy.optimize as op
+import numpy as np, scipy.optimize as op
+import ray as r, elements as e
 
 #a value that tries to account for the truncation of numbers in the spot_size() method
 SPOTSIZE_OUTPUT_ERROR=1.1
@@ -104,6 +104,8 @@ def get_c2(c1, focus, z1=100e-3, z2=105e-3, n1=1, n2=1.5168):
     n1: refractive index of the environment.
     n2: refractive index of the lens.
     """
-
-    return op.newton(lambda x : get_focus([e.SphericalRefractor(z1, c1, n1, n2),
-                                            e.SphericalRefractor(z2, x, n2, n1)]) - focus, c1)
+    try:
+        return op.newton(lambda x : get_focus([e.SphericalRefractor(z1, c1, n1, n2),
+                                                e.SphericalRefractor(z2, x, n2, n1)]) - focus, c1)
+    except:
+        return None
