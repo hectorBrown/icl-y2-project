@@ -85,3 +85,20 @@ def optimization_ext():
 
     curvs = ot.optimize(*lens_setup)
     return (fig_curv, curvs)
+
+def chromatic_ext():
+    def index_func(wavelength):
+        return 1.5168 + (wavelength - 380e-9) / (740e-9 - 380e-9) * 0.001
+    lens = [e.SphericalRefractor(100e-3, 0.02e3, 1, index_func),
+            e.SphericalRefractor(105e-3, 0, index_func, 1)]
+    output = e.OutputPlane(250e-3)
+    red = r.bundle(10e-3, 6, 6, wavelength=380e-9)
+    green = r.bundle(10e-3, 6, 6, wavelength=(740 + 380) / 2 * 1e-9)
+    blue = r.bundle(10e-3, 6, 6, wavelength=740e-9)
+    bundle = np.array(list(red) + list(green) + list(blue))
+    for ray in bundle:
+        for surface in lens:
+            surface.propagate(ray)
+        output.propagate(ray)
+    
+    return g.graph_zplane(bundle, 200e-3)
