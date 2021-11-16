@@ -5,7 +5,7 @@ Contains the ray class.
 
 import numpy as np, copy
 
-def bundle(r, n_rings, n_rays):
+def bundle(r, n_rings, n_rays, wavelength=None):
     """
     Generates a bundle of rays of radius r.
     n_rings is the number of concentric rings to build the bundle of (incuding the central ray).
@@ -19,7 +19,7 @@ def bundle(r, n_rings, n_rays):
     for i in range(n_rings + 1):
         if i == 0:
             #if central ray
-            rays.append(Ray(np.array([0, 0, 0]), np.array([0, 0, 1])))
+            rays.append(Ray([0, 0, 0], [0, 0, 1], wavelength))
         else:
             #walk around circle
             the_step = 2 * np.pi / (n_rays * i)
@@ -27,7 +27,7 @@ def bundle(r, n_rings, n_rays):
                 #calculated final values
                 r_n = r_step * i
                 the_n = the_step * j
-                rays.append(Ray(np.array([r_n * np.cos(the_n), r_n * np.sin(the_n), 0]), np.array([0, 0, 1])))
+                rays.append(Ray([r_n * np.cos(the_n), r_n * np.sin(the_n), 0], [0, 0, 1], wavelength))
     return rays
 
 class Ray:
@@ -35,6 +35,9 @@ class Ray:
     Describes an optical ray with a trail of positions and directions.
     """
     
+    __VISIBLE_WAVELENGTH_LOWER = 380e-9
+    __VISIBLE_WAVELENGTH_UPPER = 740e-9
+
     def __init__(self, init_pt, init_dir, wavelength=None):
         init_pt, init_dir = np.array(init_pt), np.array(init_dir)
         self.__wavelength = wavelength
@@ -46,7 +49,7 @@ class Ray:
             raise Exception("Ray can not have no direction.")
     
     def __repr__(self):
-        if wavelength is None:
+        if self.__wavelength is None:
             return "ray.Ray {{pts: {}, dirs: {}}}".format(self.__pts, self.__dirs)
         else:
             return "ray.Ray {{pts: {}, dirs: {}, wavelength: {}}}".format(self.__pts, self.__dirs, self.__wavelength)
@@ -117,3 +120,21 @@ class Ray:
             for pt in self.__pts:
                 if pt[2] == z:
                     return pt[:-1]
+    
+    def get_colour(self):
+        """
+        Linearly approximates RGB from a wavelength in the visible light spectrum.
+
+        This is not accurate and is for visualisation purposes only.
+        """
+        #black if no wavelength
+        if self.__wavelength is None:
+            return (0, 0, 0)
+
+        grad = 2 / (Ray.__VISIBLE_WAVELENGTH_UPPER + Ray.__VISIBLE_WAVELENGTH_LOWER)
+        if self.__wavelength < (Ray.__VISIBLE_WAVELENGTH_UPPER + Ray.__VISIBLE_WAVELENGTH_LOWER) / 2:
+            return (1 - grad * (self.__wavelength - Ray.__VISIBLE_WAVELENGTH_LOWER), 
+                    grad * (self.__wavelength - Ray.__VISIBLE_WAVELENGTH_LOWER), 0)
+        else:
+            return (0, 1 - grad * (self.__wavelength - Ray.__VISIBLE_WAVELENGTH_LOWER),
+                    grad * (self.__wavelength - Ray.__VISIBLE_WAVELENGTH_LOWER))

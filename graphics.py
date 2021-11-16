@@ -18,11 +18,12 @@ def graph_zplane(rays, z):
 
     #a list of x,y values with those rays that don't pass z omitted
     xy = list(filter(lambda y : not y is None, [x.get_xy(z) for x in rays]))
+    colours = np.array(list([x[1] for x in filter(lambda y : not y[0] is None, [(x.get_xy(z), x.get_colour()) for x in rays])]))
 
     #check if there are any at all
     if len(xy):
         fig, ax = plt.subplots()
-        ax.scatter(*np.array(xy).transpose())
+        ax.scatter(*np.array(xy).transpose(), c=colours)
         #attempted fix for matplotlib bug
         ax.set_xlim(-abs(max([x[0] for x in xy])) * MPL_BUGFIX_SCALE, abs(max([x[0] for x in xy])) * MPL_BUGFIX_SCALE)
         ax.set_ylim(-abs(max([x[1] for x in xy])) * MPL_BUGFIX_SCALE, abs(max([x[1] for x in xy])) * MPL_BUGFIX_SCALE)
@@ -38,7 +39,7 @@ def graph_yplane(rays):
 
     fig, ax = plt.subplots()
     for ray in rays:
-        ax.plot([x[2] for x in ray.vertices()], [x[1] for x in ray.vertices()])
+        ax.plot([x[2] for x in ray.vertices()], [x[1] for x in ray.vertices()], c=ray.get_colour())
     return fig
 
 def graph_spot_size(range, step, focus, z1, z2, n1, n2):
