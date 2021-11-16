@@ -25,16 +25,29 @@ class SphericalRefractor(Element):
         curvature: 1/radius of curvature, this is negative if the centre of curvature is smaller than z0.
         n1: refractive index on the side facing negative z.
         n2: refractive index on the side facing positive z.
+        Both n1, n2 can be functions of wavelengths, or constant values. If functions, they should be able to handle and provide output for input None.
         apt: aperture radius.
         """
 
         self.__z0 = z0
         self.__curv = curvature
-        self.__n1, self.__n2 = n1, n2
+
+        if callable(n1):
+            self.__n1 = n1
+        else:
+            self.__n1 = lambda x : n1
+        if callable(n2):
+            self.__n2 = n2
+        else:
+            self.__n2 = lambda x : n2
+
         self.__apt = apt
         
     def __repr__(self):
-        return "elements.SphericalRefractor({:g}, {:g}, {:g}, {:g}, {:g})".format(self.__z0, self.__curv, self.__n1, self.__n2, self.__apt)
+        if not self.__apt is None:
+            return "elements.SphericalRefractor({:g}, {:g}, {}, {}, {:g})".format(self.__z0, self.__curv, self.__n1, self.__n2, self.__apt)
+        else:
+            return "elements.SphericalRefractor({:g}, {:g}, {}, {})".format(self.__z0, self.__curv, self.__n1, self.__n2)
 
     def __center(self):
         """
@@ -107,7 +120,7 @@ class SphericalRefractor(Element):
             
         surface_normal /= np.linalg.norm(surface_normal)
 
-        refracted_dirn = ou.refract(ray.dirn(), surface_normal, self.__n1, self.__n2)
+        refracted_dirn = ou.refract(ray.dirn(), surface_normal, self.__n1(ray.wavelength()), self.__n2(ray.wavelength()))
 
         if not refracted_dirn is None:
             ray.append(intercept, refracted_dirn)
