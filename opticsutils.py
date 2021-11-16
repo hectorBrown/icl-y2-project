@@ -6,6 +6,9 @@ General purpose utility functions for optics.
 import numpy as np
 import ray as r, elements as e
 
+#a value that tries to account for the truncation of numbers in the spot_size() method
+SPOTSIZE_OUTPUT_ERROR=1.1
+
 def refract(incident, surface, n1, n2):
     """
     Refracts a ray according to Snell's law, both incident and surface should be normalised vectors.
@@ -38,15 +41,20 @@ def get_focus(lens, paraxial_precision=0.1e-3, output_step=250e-3):
     paraxial_precision: the y-height of the probe ray.
     output_step: best not to change, effects the way the function iterates, try raising if not producing output.
     
-    Returns the z-value of the paraxial focus.
+    Returns the z-value of the paraxial focus, or false if the lens does not converge.
     """
     
     probe = r.Ray([0, paraxial_precision, 0], [0,0,1])
     for surface in lens:
         surface.propagate(probe)
     
+    #return False if lens doesn't focus
+    e.OutputPlane(output_step).propagate(probe)
+    if probe.vertices()[-1][1] >= probe.vertices()[-2][1]:
+        return False
+
     #this progressively increases the output plane until the probe ray falls through the z-axis.
-    i = 1
+    i = 2
     while probe.pos()[1] > 0:
         output = e.OutputPlane(i * output_step)
         output.propagate(probe)
@@ -65,13 +73,16 @@ def spot_size(lens, focus=None, bundle_radius=5e-3):
     bundle_radius: the radius of the bundle used for estimation.
     
     If this method hangs, it is likely due to opticsutils.get_focus - call it explicitly as a kwarg to adjust running parameters or input a focus manually.
+    Returns false if the lens does not converge.
     """
     
     if focus is None:
         focus = get_focus(lens)
+        if not focus:
+            return False
         
     bundle = r.bundle(bundle_radius, 6, 6)
-    output = e.OutputPlane(focus)
+    output = e.OutputPlane(focus * SPOTSIZE_OUTPUT_ERROR)
     
     for ray in bundle:
         for surface in lens:
@@ -82,4 +93,3 @@ def spot_size(lens, focus=None, bundle_radius=5e-3):
     
     return np.sqrt(np.average(spots))
             
-    
