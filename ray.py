@@ -35,8 +35,9 @@ class Ray:
     Describes an optical ray with a trail of positions and directions.
     """
     
-    def __init__(self, init_pt, init_dir):
+    def __init__(self, init_pt, init_dir, wavelength=None):
         init_pt, init_dir = np.array(init_pt), np.array(init_dir)
+        self.__wavelength = wavelength
         self.__pts = [init_pt]
         if np.linalg.norm(init_dir) != 0:
             #normalise direction (essentially for easy testing)
@@ -45,7 +46,10 @@ class Ray:
             raise Exception("Ray can not have no direction.")
     
     def __repr__(self):
-        return "ray.Ray {{pts: {}, dirs: {}}}".format(self.__pts, self.__dirs)
+        if wavelength is None:
+            return "ray.Ray {{pts: {}, dirs: {}}}".format(self.__pts, self.__dirs)
+        else:
+            return "ray.Ray {{pts: {}, dirs: {}, wavelength: {}}}".format(self.__pts, self.__dirs, self.__wavelength)
         
     def pos(self):
         """
@@ -61,6 +65,13 @@ class Ray:
 
         return self.__dirs[-1]
     
+    def wavelength(self):
+        """
+        Returns the wavelength of the ray.
+        """
+
+        return self.__wavelength
+
     def append(self, next_pt, next_dir):
         """
         Appends a new point-direction pair to the trail.
@@ -81,6 +92,7 @@ class Ray:
         r = Ray(np.array([0,0,0]), np.array([0,0,1]))
         r.__pts = copy.deepcopy(self.__pts)
         r.__dirs = copy.deepcopy(self.__dirs)
+        r.__wavelength = self.__wavelength
         return r
     
     def get_xy(self, z):
