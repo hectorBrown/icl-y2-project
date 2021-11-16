@@ -7,7 +7,7 @@ Update matplotlib to fix -- please see https://github.com/matplotlib/matplotlib/
 """
 
 import matplotlib.pyplot as plt, numpy as np
-import ray as r
+import opticsutils as ou, elements as e
 
 MPL_BUGFIX_SCALE = 1.1
 
@@ -39,4 +39,23 @@ def graph_yplane(rays):
     fig, ax = plt.subplots()
     for ray in rays:
         ax.plot([x[2] for x in ray.vertices()], [x[1] for x in ray.vertices()])
+    return fig
+
+def graph_spot_size(range, step, focus, z1, z2, n1, n2):
+    """
+    Graph RMS spot size (optimization measure) against curvature for a given range.
+
+    range: should be a tuple (start, end).
+    """
+    c1 = np.arange(*range, step=step)
+    size = []
+    for i, c in enumerate(c1):
+        print("{0:.1f}%".format(i / len(c1) * 100))
+        if not ou.get_c2(c, focus) is None:
+            size.append(ou.spot_size([e.SphericalRefractor(100e-3, c, 1, 1.5168),
+                                    e.SphericalRefractor(105e-3, ou.get_c2(c, focus), 1.5168, 1)]))
+        else:
+            size.append(None)
+    fig, ax = plt.subplots()
+    ax.plot(c1, size)
     return fig
