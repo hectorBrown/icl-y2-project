@@ -56,7 +56,7 @@ def get_focus(lens, paraxial_precision=0.1e-3, output_step=250e-3):
     #this progressively increases the output plane until the probe ray falls through the z-axis.
     i = 2
     while probe.pos()[1] > 0:
-        output = e.OutputPlane(i * output_step)
+        output = e.OutputPlane(i**2 * output_step)
         output.propagate(probe)
         i += 1
     
@@ -105,7 +105,9 @@ def get_c2(c1, focus, z1=100e-3, z2=105e-3, n1=1, n2=1.5168):
     n2: refractive index of the lens.
     """
     try:
+        #guess works empirically, other methods give awkward discontinuities
+        guess = c1 - focus * 100
         return op.newton(lambda x : get_focus([e.SphericalRefractor(z1, c1, n1, n2),
-                                                e.SphericalRefractor(z2, x, n2, n1)]) - focus, c1)
+                                                e.SphericalRefractor(z2, x, n2, n1)]) - focus, guess)
     except:
         return None
