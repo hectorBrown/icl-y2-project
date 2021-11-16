@@ -7,7 +7,7 @@ import numpy as np, scipy.optimize as op
 import ray as r, elements as e
 
 #a value that tries to account for the truncation of numbers in the spot_size() method
-SPOTSIZE_OUTPUT_ERROR=1.1
+__SPOTSIZE_OUTPUT_ERROR=1.1
 
 def refract(incident, surface, n1, n2):
     """
@@ -82,7 +82,7 @@ def spot_size(lens, focus=None, bundle_radius=5e-3):
             return False
         
     bundle = r.bundle(bundle_radius, 6, 6)
-    output = e.OutputPlane(focus * SPOTSIZE_OUTPUT_ERROR)
+    output = e.OutputPlane(focus * __SPOTSIZE_OUTPUT_ERROR)
     
     for ray in bundle:
         for surface in lens:
