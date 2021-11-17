@@ -9,6 +9,8 @@ import ray as r, elements as e
 #a value that tries to account for the truncation of numbers in the spot_size() method
 __SPOTSIZE_OUTPUT_ERROR=1.1
 
+visible_lims = (380e-9, 740e-9)
+
 def refract(incident, surface, n1, n2):
     """
     Refracts a ray according to Snell's law, both incident and surface should be normalised vectors.

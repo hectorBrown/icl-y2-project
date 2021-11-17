@@ -4,6 +4,7 @@ Contains the ray class.
 """
 
 import numpy as np, copy
+import opticsutils as ou
 
 def bundle(r, n_rings, n_rays, wavelength=None):
     """
@@ -34,9 +35,6 @@ class Ray:
     """
     Describes an optical ray with a trail of positions and directions.
     """
-    
-    __VISIBLE_WAVELENGTH_LOWER = 380e-9
-    __VISIBLE_WAVELENGTH_UPPER = 740e-9
 
     def __init__(self, init_pt, init_dir, wavelength=None):
         init_pt, init_dir = np.array(init_pt), np.array(init_dir)
@@ -138,10 +136,15 @@ class Ray:
         if self.__wavelength is None:
             return (0, 0, 0)
 
-        grad = 2 / (Ray.__VISIBLE_WAVELENGTH_UPPER + Ray.__VISIBLE_WAVELENGTH_LOWER)
-        if self.__wavelength < (Ray.__VISIBLE_WAVELENGTH_UPPER + Ray.__VISIBLE_WAVELENGTH_LOWER) / 2:
-            return (1 - grad * (self.__wavelength - Ray.__VISIBLE_WAVELENGTH_LOWER), 
-                    grad * (self.__wavelength - Ray.__VISIBLE_WAVELENGTH_LOWER), 0)
+        #black if outside visible spectrum
+        if self.__wavelength < ou.visible_lims[0] or self.__wavelength > ou.visible_lims[1]:
+            return (0, 0, 0)
+
+        visible_centre = (ou.visible_lims[1] + ou.visible_lims[0]) / 2
+        grad = 2 / (ou.visible_lims[1] - ou.visible_lims[0])
+        if self.__wavelength < visible_centre:
+            return (1 - grad * (self.__wavelength - ou.visible_lims[0]), 
+                    grad * (self.__wavelength - ou.visible_lims[0]), 0)
         else:
-            return (0, 1 - grad * (self.__wavelength - Ray.__VISIBLE_WAVELENGTH_LOWER),
-                    grad * (self.__wavelength - Ray.__VISIBLE_WAVELENGTH_LOWER))
+            return (0, 1 - grad * (self.__wavelength - visible_centre),
+                    grad * (self.__wavelength - visible_centre))
