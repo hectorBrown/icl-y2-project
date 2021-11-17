@@ -56,7 +56,7 @@ def get_focus(system, paraxial_precision=0.1e-3, output_step=250e-3):
     """
     
     probe = r.Ray([0, paraxial_precision, 0], [0,0,1])
-    for surface in lens:
+    for surface in system:
         surface.propagate(probe)
     
     #return False if lens doesn't focus
