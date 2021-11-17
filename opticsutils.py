@@ -46,14 +46,14 @@ def reflect(incident, surface):
 
     return reflected
 
-def get_focus(lens, paraxial_precision=0.1e-3, output_step=250e-3):
+def get_focus(system, paraxial_precision=0.1e-3, output_step=250e-3):
     """
-    Uses a probe ray to estimate the focal point of a lens system.
-    lens: should be a list containing all refracting surfaces.
+    Uses a probe ray to estimate the focal point of an optical system.
+    system: should be a list containing all surfaces.
     paraxial_precision: the y-height of the probe ray.
     output_step: best not to change, effects the way the function iterates, try raising if not producing output.
     
-    Returns the z-value of the paraxial focus, or false if the lens does not converge.
+    Returns the z-value of the paraxial focus, or false if the system does not converge.
     """
     
     probe = r.Ray([0, paraxial_precision, 0], [0,0,1])
@@ -68,7 +68,7 @@ def get_focus(lens, paraxial_precision=0.1e-3, output_step=250e-3):
     #this progressively increases the output plane until the probe ray falls through the z-axis.
     i = 2
     while probe.pos()[1] > 0:
-        output = e.OutputPlane(i * output_step)
+        output = e.OutputPlane(i * output_step * probe.dirn()[2]/abs(probe.dirn()[2]))
         output.propagate(probe)
         i += 1
     
@@ -76,20 +76,20 @@ def get_focus(lens, paraxial_precision=0.1e-3, output_step=250e-3):
     vertices = probe.vertices()
     ratio = abs(vertices[-2][1]/(vertices[-2][1] - vertices[-1][1]))
     
-    return abs(vertices[-2][2] - vertices[-1][2]) * ratio + vertices[-2][2]
+    return (vertices[-1][2] - vertices[-2][2]) * ratio + vertices[-2][2]
     
-def spot_size(lens, focus=None, bundle_radius=5e-3):
+def spot_size(system, focus=None, bundle_radius=5e-3):
     """
-    Gets the RMS geometrical spot size for a lens system.
+    Gets the RMS geometrical spot size for a system.
     focus: defaults to None, if None will use opticsutils.get_focus to find.
     bundle_radius: the radius of the bundle used for estimation.
     
     If this method hangs, it is likely due to opticsutils.get_focus - call it explicitly as a kwarg to adjust running parameters or input a focus manually.
-    Returns false if the lens does not converge.
+    Returns false if the system does not converge.
     """
     
     if focus is None:
-        focus = get_focus(lens)
+        focus = get_focus(system)
         if not focus:
             return False
         
@@ -97,7 +97,7 @@ def spot_size(lens, focus=None, bundle_radius=5e-3):
     output = e.OutputPlane(focus * __SPOTSIZE_OUTPUT_ERROR)
     
     for ray in bundle:
-        for surface in lens:
+        for surface in system:
             surface.propagate(ray)
         output.propagate(ray)
     
