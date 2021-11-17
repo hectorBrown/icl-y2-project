@@ -47,12 +47,13 @@ class Ray:
             self.__dirs = [init_dir / np.linalg.norm(init_dir)]
         else:
             raise Exception("Ray can not have no direction.")
+        self.__terminated = False
     
     def __repr__(self):
         if self.__wavelength is None:
-            return "ray.Ray {{pts: {}, dirs: {}}}".format(self.__pts, self.__dirs)
+            return "ray.Ray {{pts: {}, dirs: {}, terminated: {}}}".format(self.__pts, self.__dirs, self.__terminated)
         else:
-            return "ray.Ray {{pts: {}, dirs: {}, wavelength: {}}}".format(self.__pts, self.__dirs, self.__wavelength)
+            return "ray.Ray {{pts: {}, dirs: {}, terminated: {}, wavelength: {}}}".format(self.__pts, self.__dirs, self.__terminated, self.__wavelength)
         
     def pos(self):
         """
@@ -67,6 +68,12 @@ class Ray:
         """
 
         return self.__dirs[-1]
+    
+    def terminate(self):
+        self.__terminated = True
+    
+    def terminated(self):
+        return self.__terminated
     
     def wavelength(self):
         """
