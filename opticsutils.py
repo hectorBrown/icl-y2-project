@@ -34,6 +34,18 @@ def refract(incident, surface, n1, n2):
     
     return refracted
 
+def reflect(incident, surface):
+    """
+    Reflects a ray, both incident and surface should be normalised vectors.
+    """
+
+    #get angle of incidence
+    the = np.arccos(np.dot(-incident, surface))
+
+    reflected = incident + np.sqrt(2 * (1 - np.cos(np.pi - 2 * the))) * surface
+
+    return reflected
+
 def get_focus(lens, paraxial_precision=0.1e-3, output_step=250e-3):
     """
     Uses a probe ray to estimate the focal point of a lens system.
