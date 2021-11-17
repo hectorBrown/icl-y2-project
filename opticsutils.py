@@ -6,9 +6,6 @@ General purpose utility functions for optics.
 import numpy as np, scipy.optimize as op
 import ray as r, elements as e
 
-#a value that tries to account for the truncation of numbers in the spot_size() method
-__SPOTSIZE_OUTPUT_ERROR=1.1
-
 visible_lims = (380e-9, 740e-9)
 
 def refract(incident, surface, n1, n2):
@@ -96,7 +93,8 @@ def spot_size(system, focus=None, bundle_radius=5e-3):
             return False
         
     bundle = r.bundle(bundle_radius, 6, 6)
-    output = e.OutputPlane(focus * __SPOTSIZE_OUTPUT_ERROR)
+    #coefficient because sometimes focus is truncated between here and get_xy, and the focal point lies past the output plane
+    output = e.OutputPlane(focus * 1.1)
     
     for ray in bundle:
         for surface in system:
