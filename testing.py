@@ -102,3 +102,13 @@ def chromatic_ext():
         output.propagate(ray)
     
     return g.graph_zplane(bundle, 200e-3)
+
+def reflecting_ext():
+    mirror = e.SphericalReflector(100e-3, -0.02e3)
+    bundle = r.bundle(10e-3, 6, 6)
+    output = e.OutputPlane(-50e-3)
+    for ray in bundle:
+        mirror.propagate(ray)
+        output.propagate(ray)
+
+    return g.graph_yplane(bundle)
