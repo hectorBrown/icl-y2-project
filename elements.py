@@ -13,6 +13,9 @@ class Element:
 
     def propagate(self, ray):
         raise NotImplementedError()
+    
+    def get_paraxial(self):
+        raise NotImplementedError()
 
 class SphericalElement(Element):
     """
@@ -30,6 +33,16 @@ class SphericalElement(Element):
             return np.array([0, 0, self._z0 + (1/self._curv)])
         else:
             return np.array([0, 0, self._z0])
+
+    def get_paraxial(self):
+        """
+        Gets a number indicative of where the paraxial approximation is good for this element.
+        """
+
+        if self._curv != 0:
+            return self._curv**-1 / 500
+        else:
+            return 1
 
     def _intercept(self, ray):
         """
@@ -225,6 +238,12 @@ class OutputPlane(Element):
         
         return intercept
     
+    def get_paraxial(self):
+        """
+        Gets a reasonable estimate for paraxial approximation: here returns 1, as OutputPlane does not modify the ray.
+        """
+
+        return 1
 
     def propagate(self, ray):
         """

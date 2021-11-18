@@ -45,7 +45,7 @@ def reflect(incident, surface):
 
     return reflected
 
-def get_focus(system, paraxial_precision=0.1e-3, output_step=250e-3):
+def get_focus(system, paraxial_precision=None, output_step=250e-3):
     """
     Uses a probe ray to estimate the focal point of an optical system.
     system: should be a list containing all surfaces.
@@ -54,6 +54,8 @@ def get_focus(system, paraxial_precision=0.1e-3, output_step=250e-3):
     
     Returns the z-value of the paraxial focus, or false if the system does not converge.
     """
+    if paraxial_precision is None:
+        paraxial_precision = min([x.get_paraxial() for x in system])
     
     probe = r.Ray([0, paraxial_precision, 0], [0,0,1])
     for surface in system:
