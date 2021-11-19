@@ -15,10 +15,10 @@ def refract(incident, surface, n1, n2):
 
     #get angle of incidence
     the_1 = np.arccos(np.dot(-incident, surface))
-    
+
     if np.sin(the_1) > (n2/n1):
-        #if TIR
-        return None
+        #TIR
+        return reflect(incident, surface)
     
     #calc angle of refraction
     the_2 = np.arcsin((n1/n2) * np.sin(the_1))
