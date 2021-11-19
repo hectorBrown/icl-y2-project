@@ -3,7 +3,7 @@
 Testing module.
 """
 
-import numpy as np
+import numpy as np, matplotlib.pyplot as plt
 import elements as e, graphics as g, opticsutils as ou, ray as r, optimizer as ot
 
 def t9():
@@ -114,18 +114,14 @@ def reflecting_ext():
     return g.graph_yplane(bundle)
 
 def rainbow():
-    #replace mirror
     sys = e.System()
-    sys.append(e.SphericalRefractor(20e-3, (1e-3)**-1, 1, lambda n : ou.get_index(ou.load_index("data/water.csv"), n)))
-    sys.append(e.SphericalReflector(22e-3, (1e-3)**-1))
-    sys.append(e.SphericalRefractor(20e-3, (1e-3)**-1, lambda n : ou.get_index(ou.load_index("data/water.csv"), n), 1))
-    #needs same refractor again
-    sys.append(e.OutputPlane(15e-3))
-    bundle = [r.Ray([0, 8e-3, 0], [0, -6.6, 20], wavelength=(380e-9 + (i/10) * (740e-9 - 380e-9))) for i in range(11)]
-    #bundle = [r.Ray([0, 8.277e-3, 0], [0, -7.1, 20], wavelength=380e-9)]
+    sys.append(e.SphericalRefractor(20e-3, (3e-3)**-1, 1, lambda l : ou.get_index(ou.load_index("data/water.csv"), l)))
+    sys.append(e.SphericalReflector(26e-3, -(3e-3)**-1))
+    sys.append(e.SphericalRefractor(20e-3, (3e-3)**-1, lambda l : ou.get_index(ou.load_index("data/water.csv"), l), 1))
+    sys.append(e.OutputPlane(0.0))
+
+    bundle = [r.Ray([0, 3.5e-3, 0], [0, -0.6e-3, 20e-3], wavelength=(380e-9 + (i/10) * (740e-9 - 380e-9))) for i in range(11)]
     
     sys.propagate(bundle)
     
     return g.graph_yplane(bundle)
-
-rainbow()
