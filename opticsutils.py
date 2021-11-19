@@ -3,7 +3,7 @@
 General purpose utility functions for optics.
 """
 
-import numpy as np, scipy.optimize as op
+import numpy as np, scipy.optimize as op, os.path as osp
 import ray as r, elements as e
 
 visible_lims = (380e-9, 740e-9)
@@ -125,3 +125,30 @@ def get_c2(c1, focus, z1=100e-3, z2=105e-3, n1=1, n2=1.5168):
                                                 e.SphericalRefractor(z2, x, n2, n1)]) - focus, guess)
     except:
         return None
+
+def load_index(path):
+    """
+    Returns a lookup table of wavelength:index pairs from a CSV.
+    Path should be relative.
+    """
+    
+    return {x[0]:x[1] for x in np.loadtxt(osp.join(osp.abspath(osp.dirname(__file__)), path), delimiter=',')}
+    
+
+def get_index(table, wavelength):
+    """
+    Returns the index of an arbitrary index from a lookup table.
+    """
+    
+    sorted_keys = sorted(table.keys())
+    
+    if wavelength < sorted_keys[0] or wavelength > sorted_keys[-1]:
+        raise ValueError("No value for given wavelength in the range of the table.")
+    
+    for i in range(len(sorted_keys) - 1):
+        pair = (sorted_keys[i], sorted_keys[i+1])
+        if wavelength >= pair[0] and wavelength <= pair[1]:
+            grad = (table[pair[1]] - table[pair[0]]) / (pair[1] - pair[0])
+            return table[pair[0]] + grad * (wavelength - pair[0])
+    
+    

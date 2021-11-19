@@ -87,8 +87,8 @@ class SphericalElement(Element):
             a = -np.dot(r, ray.dirn())
             b = np.sqrt(det)
             
-            #select based on curvature
-            if self._curv < 0:
+            #select based on curvature, direction
+            if (self._curv < 0 and ray.dirn()[2] > 0) or (self._curv > 0 and ray.dirn()[2] < 0):
                 l = a + b
             else:
                 l = a - b
