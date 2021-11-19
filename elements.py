@@ -7,6 +7,28 @@ import numpy as np
 from collections.abc import Iterable
 import opticsutils as ou
 
+class System:
+    """
+    Convenience class, just a list of elements.
+    """
+    
+    def __init__(self, elements=[]):
+        self.__elements = elements
+        
+    def append(self, element):
+        """
+        Appends a new element to the system.
+        """
+        
+        self.__elements.append(element)
+        
+    def propagate(self, ray):
+        """
+        Propagates a ray, or list of rays, through the system.
+        """
+        for elem in self.__elements:
+            elem.propagate(ray)
+
 class Element:
 
     def __repr__(self):
