@@ -4,6 +4,7 @@ Contains the Element base class, and all derived classes.
 """
 
 import numpy as np
+from collections.abc import Iterable
 import opticsutils as ou
 
 class Element:
@@ -123,7 +124,15 @@ class SphericalRefractor(SphericalElement):
         Propagates a ray through the element.
         If the ray does not intercept, or totally internally reflects, this method will return False, and won't update the ray.
         If the ray totally internally reflects, the ray will be terminated.
+        
+        If passed an iterable, will propagate each element through the refractor. Returns a set of tuples representing notable function outputs with the index of the element that produced it.
         """
+        if isinstance(ray, Iterable):
+            res = [self.propagate(r) for r in ray]
+            if all([x is None for x in res]):
+                return None
+            else:
+                return list(filter(lambda x : not x[1] is None, [(i, x) for i, x in enumerate(res)]))
 
         if ray.terminated():
             return False
@@ -179,7 +188,16 @@ class SphericalReflector(SphericalElement):
         Propagates a ray through the element.
         If the ray does not intercept, or hits the non-reflective side, this method will return False, and won't update the ray.
         If the ray hits the non-reflective side, the ray will be terminated.
+
+        If passed an iterable, will propagate each element through the reflector. Returns a set of tuples representing notable function outputs with the index of the element that produced it.
         """
+        
+        if isinstance(ray, Iterable):
+            res = [self.propagate(r) for r in ray]
+            if all([x is None for x in res]):
+                return None
+            else:
+                return list(filter(lambda x : not x[1] is None, [(i, x) for i, x in enumerate(res)]))
 
         if ray.terminated():
             return False
@@ -249,7 +267,16 @@ class OutputPlane(Element):
         """
         Propagates a ray through the element.
         If the ray does not intercept, this method will return False, and won't update the ray.
+        
+        If passed an iterable, will propagate each element through the plane. Returns a set of tuples representing notable function outputs with the index of the element that produced it.
         """
+        
+        if isinstance(ray, Iterable):
+            res = [self.propagate(r) for r in ray]
+            if all([x is None for x in res]):
+                return None
+            else:
+                return list(filter(lambda x : not x[1] is None, [(i, x) for i, x in enumerate(res)]))
 
         intercept = self._intercept(ray)
         
