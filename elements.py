@@ -120,7 +120,7 @@ class SphericalRefractor(SphericalElement):
         curvature: 1/radius of curvature, this is negative if the centre of curvature is smaller than z0.
         n1: refractive index on the side facing negative z.
         n2: refractive index on the side facing positive z.
-        Both n1, n2 can be functions of wavelengths, or constant values. If functions, they should be able to handle and provide output for input None.
+        Both n1, n2 can be functions of wavelength, or constant values. If functions, they should be able to handle and provide output for input None.
         apt: aperture radius.
         """
 
