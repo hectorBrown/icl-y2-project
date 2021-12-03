@@ -61,9 +61,10 @@ class SphericalElement(Element):
         """
         Gets a number indicative of where the paraxial approximation is good for this element.
         """
-
+        if self._curv is None:
+            return None
         if self._curv != 0:
-            return self._curv**-1 / 500
+            return abs(self._curv)**-1 / 500
         else:
             return 1
 
