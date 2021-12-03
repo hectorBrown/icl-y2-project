@@ -143,8 +143,8 @@ class Ray:
         visible_centre = (ou.visible_lims[1] + ou.visible_lims[0]) / 2
         grad = 2 / (ou.visible_lims[1] - ou.visible_lims[0])
         if self.__wavelength < visible_centre:
-            return (1 - grad * (self.__wavelength - ou.visible_lims[0]), 
-                    grad * (self.__wavelength - ou.visible_lims[0]), 0)
+            return (0, grad * (self.__wavelength - ou.visible_lims[0]), 
+                    1 - grad * (self.__wavelength - ou.visible_lims[0]))
         else:
-            return (0, 1 - grad * (self.__wavelength - visible_centre),
-                    grad * (self.__wavelength - visible_centre))
+            return (grad * (self.__wavelength - visible_centre), 
+                    1 - grad * (self.__wavelength - visible_centre), 0)
