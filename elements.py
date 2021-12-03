@@ -306,3 +306,48 @@ class OutputPlane(Element):
             return False
         
         ray.append(intercept, ray.dirn().copy())
+
+class Fibre(Element):
+    """
+    Represents an optical fibre.
+    """
+
+    def __init__(self, z0, length, radius, n1, n2):
+        self.__z0 = z0
+        self.__l = length
+        self.__rad = radius
+        if callable(n1):
+            self.__n1 = n1
+        else:
+            self.__n1 = lambda l : n1
+        if callable(n2):
+            self.__n2 = n2
+        else:
+            self.__n2 = lambda l : n2
+        
+    def __repr__(self):
+        return "elements.Fibre(z0: {:g}, length: {:g}, radius: {:g}, n1: {}, n2: {})".format(self.__z0, self.__l, self.__rad, self.__n1, self.__n2)
+    
+    def propagate(self, ray):
+
+        if isinstance(ray, Iterable):
+            res = [self.propagate(r) for r in ray]
+            if all([x is None for x in res]):
+                return None
+            else:
+                return list(filter(lambda x : not x[1] is None, [(i, x) for i, x in enumerate(res)]))
+
+        if ((ray.dirn()[2] > 0 and 
+            np.sqrt(sum([i**2 for i in ray.get_xy(self.__z0)])) < self.__rad and 
+            ray.pos()[2] < self.__z0)
+            or
+            (ray.dirn()[2] < 0 and 
+            np.sqrt(sum([i**2 for i in ray.get_xy(self.__z0 + self.__l)]) < self.__rad and 
+            ray.pos()[2] > self.__z0 + self.__l))):
+            #SHOULD PROPAGATE THE RAY REPEATEDLY UNTIL IT IS OUT OF THE FIBRE
+            pass
+        else:
+            return False
+        
+        
+        
