@@ -121,9 +121,10 @@ def reflecting_ext():
 
 def rainbow():
     sys = e.System()
-    sys.append(e.SphericalRefractor(10e-3, (1e-3)**-1, 1, lambda l : ou.get_index(ou.load_index("data/water.csv"), l)))
+    water_index = ou.load_index("data/water.csv")
+    sys.append(e.SphericalRefractor(10e-3, (1e-3)**-1, 1, lambda l : ou.get_index(water_index, l)))
     sys.append(e.SphericalReflector(12e-3, -(1e-3)**-1))
-    sys.append(e.SphericalRefractor(10e-3, (1e-3)**-1, lambda l : ou.get_index(ou.load_index("data/water.csv"), l), 1))
+    sys.append(e.SphericalRefractor(10e-3, (1e-3)**-1, lambda l : ou.get_index(water_index, l), 1))
     sys.append(e.OutputPlane(0.0))
       
     bundle = [r.Ray([0, 0.9e-3, 0], [0, 0, 20e-3], wavelength=(380e-9 + (i/10) * (740e-9 - 380e-9))) for i in range(11)]
