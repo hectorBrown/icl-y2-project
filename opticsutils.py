@@ -129,6 +129,15 @@ def get_c2(c1, focus, z1=100e-3, z2=105e-3, n1=1, n2=1.5168):
 def load_index(path):
     """
     Returns a lookup table of wavelength:index pairs from a CSV.
+
+    e.g.
+    ---material.csv---
+    wavelength_1,index_1
+    wavelength_2,index_2
+    wavelength_3,index_3
+    ...
+    ------------------
+
     Path should be relative.
     """
     
