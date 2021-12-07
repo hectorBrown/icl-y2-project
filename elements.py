@@ -28,6 +28,9 @@ class System:
         """
         for elem in self.__elements:
             elem.propagate(ray)
+    
+    def elements(self):
+        return self.__elements
 
 class Element:
 
