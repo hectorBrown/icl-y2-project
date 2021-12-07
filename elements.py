@@ -29,8 +29,14 @@ class System:
         for elem in self.__elements:
             elem.propagate(ray)
     
-    def elements(self):
-        return self.__elements
+    def get_paraxial(self):
+        """
+        Returns the paraxial distance for the entire system, this is just the minimum paraxial distance.
+        """
+        return min([x.get_paraxial() for x in self.__elements])
+    
+    def copy():
+        return System(elements=self.__elements)
 
 class Element:
 

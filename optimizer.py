@@ -11,8 +11,8 @@ def __spot_size_optimizer(c1, focus, z1, z2, n1, n2):
     Utility method for optimizing spot size.
     """
 
-    lens = [e.SphericalRefractor(z1, c1, n1, n2),
-            e.SphericalRefractor(z2, ou.get_c2(c1, focus), n2, n1)]
+    lens = e.System(elements=[e.SphericalRefractor(z1, c1, n1, n2),
+            e.SphericalRefractor(z2, ou.get_c2(c1, focus), n2, n1)])
     return ou.spot_size(lens)
 
 def optimize(focus, z1, z2, n1, n2, c1_0=0):

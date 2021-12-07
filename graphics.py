@@ -53,8 +53,8 @@ def graph_spot_size(range, step, focus, z1, z2, n1, n2):
     for i, c in enumerate(c1):
         print("{0:.1f}%".format(i / len(c1) * 100))
         if not ou.get_c2(c, focus) is None:
-            size.append(ou.spot_size([e.SphericalRefractor(100e-3, c, 1, 1.5168),
-                                    e.SphericalRefractor(105e-3, ou.get_c2(c, focus), 1.5168, 1)], focus=focus))
+            size.append(ou.spot_size(e.System(elements=[e.SphericalRefractor(100e-3, c, 1, 1.5168),
+                                    e.SphericalRefractor(105e-3, ou.get_c2(c, focus), 1.5168, 1)]), focus=focus))
         else:
             size.append(None)
     fig, ax = plt.subplots()

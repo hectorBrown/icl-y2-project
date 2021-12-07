@@ -63,17 +63,18 @@ def t13():
     return (np.sqrt(np.average(spots)), g.graph_zplane(bundle, 200e-3))
 
 def t15():
-    lens_1 = [e.SphericalRefractor(100e-3, 0, 1, 1.5168),
-            e.SphericalRefractor(105e-3, -0.02e3, 1.5168, 1)]
-    lens_2 = [e.SphericalRefractor(100e-3, 0.02e3, 1, 1.5168),
-              e.SphericalRefractor(105e-3, 0, 1.5168, 1)]
+    lens_1 = e.System(elements=[e.SphericalRefractor(100e-3, 0, 1, 1.5168),
+            e.SphericalRefractor(105e-3, -0.02e3, 1.5168, 1)])
+    lens_2 = e.System(elements=[e.SphericalRefractor(100e-3, 0.02e3, 1, 1.5168),
+              e.SphericalRefractor(105e-3, 0, 1.5168, 1)])
     
     focus_1, focus_2 = ou.get_focus(lens_1), ou.get_focus(lens_2)
     spot_size_1 = [ou.spot_size(lens_1, focus=focus_1, bundle_radius=x * 1e-3) for x in range(1,11)]
     spot_size_2 = [ou.spot_size(lens_2, focus=focus_2, bundle_radius=x * 1e-3) for x in range(1,11)]
     
     bundle_1, bundle_2 = r.bundle(15e-3, 6, 6), r.bundle(15e-3, 6, 6)
-    sys_1, sys_2 = e.System(elements=lens_1 + [e.OutputPlane(250e-3)],), e.System(elements=lens_2 + [e.OutputPlane(250e-3)])
+    sys_1 = lens_1.copy(); sys_1.append(e.OutputPlane(250e-3))
+    sys_2 = lens_2.copy(); sys_2.append(e.OutputPlane(250e-3))
     sys_1.propagate(bundle_1); sys_2.propagate(bundle_2)
     
     

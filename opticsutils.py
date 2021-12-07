@@ -45,21 +45,19 @@ def reflect(incident, surface):
 
     return reflected
 
-def get_focus(system, paraxial_precision=None, output_step=250e-3):
+def get_focus(sys, paraxial_precision=None, output_step=250e-3):
     """
     Uses a probe ray to estimate the focal point of an optical system.
-    system: should be a list containing all surfaces.
     paraxial_precision: the y-height of the probe ray.
     output_step: best not to change, effects the way the function iterates, try raising if not producing output.
     
     Returns the z-value of the paraxial focus, or false if the system does not converge.
     """
     if paraxial_precision is None:
-        paraxial_precision = min([x.get_paraxial() for x in system])
+        sys.get_paraxial()
     
     probe = r.Ray([0, paraxial_precision, 0], [0,0,1])
-    for surface in system:
-        surface.propagate(probe)
+    sys.propagate(probe)
     
     #return False if lens doesn't focus
     e.OutputPlane(output_step).propagate(probe)
@@ -79,7 +77,7 @@ def get_focus(system, paraxial_precision=None, output_step=250e-3):
     
     return (vertices[-1][2] - vertices[-2][2]) * ratio + vertices[-2][2]
     
-def spot_size(system, focus=None, bundle_radius=5e-3):
+def spot_size(sys, focus=None, bundle_radius=5e-3):
     """
     Gets the RMS geometrical spot size for a system.
     focus: defaults to None, if None will use opticsutils.get_focus to find.
@@ -90,18 +88,15 @@ def spot_size(system, focus=None, bundle_radius=5e-3):
     """
     
     if focus is None:
-        focus = get_focus(system)
+        focus = get_focus(sys)
         if not focus:
             return False
         
     bundle = r.bundle(bundle_radius, 6, 6)
     #coefficient because sometimes focus is truncated between here and get_xy, and the focal point lies past the output plane
-    output = e.OutputPlane(focus * 1.1)
+    sys.append(e.OutputPlane(focus * 1.1))
     
-    for ray in bundle:
-        for surface in system:
-            surface.propagate(ray)
-        output.propagate(ray)
+    sys.propagate(bundle)
     
     spots = [np.linalg.norm(r.get_xy(focus))**2 for r in bundle]
     
@@ -121,8 +116,8 @@ def get_c2(c1, focus, z1=100e-3, z2=105e-3, n1=1, n2=1.5168):
     try:
         #guess from the lens maker's formula
         guess = c1 - ((focus - z1) * (n2 - n1))**-1
-        return op.newton(lambda x : get_focus([e.SphericalRefractor(z1, c1, n1, n2),
-                                                e.SphericalRefractor(z2, x, n2, n1)]) - focus, guess)
+        return op.newton(lambda x : get_focus(e.System(elements=[e.SphericalRefractor(z1, c1, n1, n2),
+                                                e.SphericalRefractor(z2, x, n2, n1)])) - focus, guess)
     except:
         return None
 
@@ -159,5 +154,4 @@ def get_index(table, wavelength):
         if wavelength >= pair[0] and wavelength <= pair[1]:
             grad = (table[pair[1]] - table[pair[0]]) / (pair[1] - pair[0])
             return table[pair[0]] + grad * (wavelength - pair[0])
-    
     
