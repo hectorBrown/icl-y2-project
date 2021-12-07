@@ -54,7 +54,7 @@ def get_focus(sys, paraxial_precision=None, output_step=250e-3):
     Returns the z-value of the paraxial focus, or false if the system does not converge.
     """
     if paraxial_precision is None:
-        sys.get_paraxial()
+        paraxial_precision = sys.get_paraxial()
     
     probe = r.Ray([0, paraxial_precision, 0], [0,0,1])
     sys.propagate(probe)
