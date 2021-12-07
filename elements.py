@@ -35,7 +35,7 @@ class System:
         """
         return min([x.get_paraxial() for x in self.__elements])
     
-    def copy():
+    def copy(self):
         return System(elements=self.__elements)
 
 class Element:
