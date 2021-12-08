@@ -93,7 +93,7 @@ plt.savefig("opt_2.png", dpi=200)
 
 fig = chromatic_ext()
 plt.figure(fig.number)
-plt.title("Singlet lens model with chromatic abberation")
+plt.title("Singlet lens model with chromatic abberation\n(z=200mm)")
 plt.xlabel("x-coordinate (m)")
 plt.ylabel("y-coordinate (m)")
 plt.tight_layout()
