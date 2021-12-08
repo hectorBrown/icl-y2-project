@@ -67,6 +67,7 @@ plt.ylabel("RMS spot size (m)")
 plt.plot(np.array(range(1,11)) * 1e-3, data["correct"][1], label="Correct orientation")
 plt.plot(np.array(range(1,11)) * 1e-3, data["reverse"][1], label="Reverse orientation")
 plt.legend()
+plt.tight_layout()
 plt.savefig("t15_3.png", dpi=200)
 
 fig, data = optimization_ext()
