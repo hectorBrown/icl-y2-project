@@ -3,7 +3,7 @@
 Contains the Element base class, and all derived classes.
 """
 
-import numpy as np
+import numpy as np, copy
 from collections.abc import Iterable
 import opticsutils as ou
 
@@ -12,8 +12,11 @@ class System:
     Convenience class, just a list of elements.
     """
     
-    def __init__(self, elements=[]):
-        self.__elements = elements
+    def __init__(self, elements=None):
+        if elements is None:
+            self.__elements = []
+        else:
+            self.__elements = elements
         
     def append(self, element):
         """
@@ -36,7 +39,7 @@ class System:
         return min([x.get_paraxial() for x in self.__elements])
     
     def copy(self):
-        return System(elements=self.__elements)
+        return System(elements=self.__elements.copy())
 
 class Element:
 
