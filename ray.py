@@ -126,12 +126,17 @@ class Ray:
                 if pt[2] == z:
                     return pt[:-1]
     
-    def get_colour(self):
+    def get_colour(self, s=90e-9):
         """
-        Linearly approximates RGB from a wavelength in the visible light spectrum.
+        Approximates RGB from a wavelength in the visible light spectrum using 3 gaussian profiles.
+
+        s: standard deviation of the gaussian functions.
 
         This is not accurate and is for visualisation purposes only.
         """
+        def gauss(x, A, s, x0):
+            return A * np.exp(-(x - x0)**2 / (2 * s**2))
+
         #black if no wavelength
         if self.__wavelength is None:
             return (0, 0, 0)
@@ -140,11 +145,7 @@ class Ray:
         if self.__wavelength < ou.visible_lims[0] or self.__wavelength > ou.visible_lims[1]:
             return (0, 0, 0)
 
-        visible_centre = (ou.visible_lims[1] + ou.visible_lims[0]) / 2
-        grad = 2 / (ou.visible_lims[1] - ou.visible_lims[0])
-        if self.__wavelength < visible_centre:
-            return (0, grad * (self.__wavelength - ou.visible_lims[0]), 
-                    1 - grad * (self.__wavelength - ou.visible_lims[0]))
-        else:
-            return (grad * (self.__wavelength - visible_centre), 
-                    1 - grad * (self.__wavelength - visible_centre), 0)
+        blue = lambda x : gauss(x, 1, s, ou.visible_lims[0])
+        green = lambda x : gauss(x, 1, s, (ou.visible_lims[0] + ou.visible_lims[1]) / 2)
+        red = lambda x : gauss(x, 1, s, ou.visible_lims[1])
+        return [red(self.__wavelength), green(self.__wavelength), blue(self.__wavelength)]
