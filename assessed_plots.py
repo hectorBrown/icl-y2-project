@@ -10,7 +10,7 @@ plt.savefig("t9.png", dpi=200)
 
 fig = t11()[0]
 plt.figure(fig.number)
-plt.title("Example rays in a single spherical refracting surface")
+plt.title("Principle rays forming an image in spherical refracting surface")
 plt.ylabel("y-coordinate (m)")
 plt.xlabel("z-coordinate (m)")
 plt.tight_layout()
